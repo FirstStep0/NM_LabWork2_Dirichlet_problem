@@ -16,7 +16,6 @@ if (len(argv) != 3):
 file = open("result.txt")
 data = json.loads(file.read())
 
-test = bool(argv[1])
 var = int(argv[2])
 label = ""
 zlabel = ""
@@ -27,20 +26,27 @@ c = float(data["c"])
 d = float(data["d"])
 n = int(data["n"])
 m = int(data["m"])
+test = bool(data["test"])
 
 h = 0.0
 k = 0.0
 
 if var == 1:
 	arr = data["arr_u"][0];
-	label = "Первое решение"
+	if test:
+		label = "Численное решение тестовой задачи"
+	else:
+		label = "Решение основной задачи на основной сетке"
 	zlabel = "u1"
 	h = (b-a)/n
 	k = (d-c)/m
 	print("var == 1")
 elif var == 2:
 	arr = data["arr_u"][1];
-	label = "Второе решение"
+	if test:
+		label = "Точное решение тестовой задачи"
+	else:
+		label = "Решение основной задачи на контрольной сетке"
 	zlabel = "u2"
 	if test:
 		h = (b-a)/n
@@ -51,7 +57,10 @@ elif var == 2:
 	print("var == 2")
 elif var == 3:
 	arr = data["arr_err"]
-	label = "Разность решений"
+	if test:
+		label = "Погрешность тестовой задачи"
+	else:
+		label = "Точность основной задачи"
 	zlabel = "|u1-u2|"
 	h = (b-a)/n
 	k = (d-c)/m
@@ -95,4 +104,8 @@ ax.set_title(label)
 ax.plot_surface(ygrid, xgrid, new_result, cmap='viridis', 
                        edgecolor='black', shade = False, linewidth = 0.3)
 
+def y_fmt(x, y):
+    return '${:2.1e}'.format(x).replace('e', '\\cdot 10^{') + '}$'
+
+ax.zaxis.set_major_formatter(y_fmt)
 plt.show()
