@@ -151,6 +151,7 @@ namespace NumericalMethods_interface
             textBox_ref.Text += String.Format("Максимальное отклонение точного и численного решений наблюдается в узле x = {0:f3}; y = {1:f3}\r\n", ans.x_err, ans.y_err);
             textBox_ref.Text += String.Format("\r\n");
             textBox_ref.Text += String.Format("В качестве начального приближения использовано {0}\r\n", "интерполяция по x");
+            textBox_ref.Text += String.Format("\r\nВремя работы: {0} сек", ans.time);
         }
 
         private void print_ref_for_basic_task(answer ans) {
@@ -180,6 +181,7 @@ namespace NumericalMethods_interface
             textBox_ref.Text += String.Format("половинным шагом наблюдается в узле x = {0}; y = {1}\r\n", ans.x_err, ans.y_err);
             textBox_ref.Text += String.Format("В качестве начального приближения на основной сетке использовано {0}, \r\n", "интерполяция по x");
             textBox_ref.Text += String.Format("на сетке с половинным шагом использовано {0}\r\n", "интерполяция по x");
+            textBox_ref.Text += String.Format("\r\nВремя работы: {0} сек", ans.time);
         }
 
         private void ShowTable(DataGridView gridView, double start_x, double step_x, double start_y, double step_y, List<List<double>> arr, int n, int m) {
@@ -366,5 +368,6 @@ namespace NumericalMethods_interface
         public List<double> param;
         public List<List<List<double>>> arr_u;
         public List<List<double>> arr_err;
+        public double time;
     }
 }
