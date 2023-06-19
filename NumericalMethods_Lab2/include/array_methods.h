@@ -30,7 +30,7 @@ void copy_array(T** out, std::vector<std::vector<T>>& in, int sizeY, int sizeX) 
   }
 }
 
-void fill_array_func(double** arr, int** mask, int n, int m, double a, double c,
+inline void fill_array_func(double** arr, int** mask, int n, int m, double a, double c,
                      double h, double k, double (*func)(double, double)) {
   double x, y;
   for (int j = 0; j <= m; ++j) {
@@ -44,7 +44,7 @@ void fill_array_func(double** arr, int** mask, int n, int m, double a, double c,
   }
 }
 
-int** create_mask_area(int n, int m, int area_x, int area_y, int** area) {
+inline int** create_mask_area(int n, int m, int area_x, int area_y, int** area) {
   int** arr2 = create_array<int>(m + 1, n + 1);
 
   int dx = n / area_x;
@@ -113,7 +113,7 @@ int** create_mask_area(int n, int m, int area_x, int area_y, int** area) {
   return arr2;
 }
 
-void fill_border_of_array(double** arr, int** mask, const global_data& data) {
+inline void fill_border_of_array(double** arr, int** mask, const global_data& data) {
   double a = data.a, b = data.b, c = data.c, d = data.d;
   double h = (data.b - data.a) / data.n;
   double k = (data.d - data.c) / data.m;
@@ -142,7 +142,7 @@ void fill_border_of_array(double** arr, int** mask, const global_data& data) {
   }
 }
 
-void fill_arrays_of_coord(global_data& data) {
+inline void fill_arrays_of_coord(global_data& data) {
   data.coord_x.resize(data.n + 1);
   data.coord_y.resize(data.m + 1);
 
@@ -155,7 +155,7 @@ void fill_arrays_of_coord(global_data& data) {
   for (int i = 0; i <= data.n; ++i) data.coord_x[i] = a + i * h;
 }
 
-std::pair<double**, int**> create_area(const global_data& data) {
+inline std::pair<double**, int**> create_area(const global_data& data) {
   std::pair<double**, int**> ans;
   double** arr = create_array<double>(data.m + 1, data.n + 1);
   int** mask =
@@ -167,7 +167,7 @@ std::pair<double**, int**> create_area(const global_data& data) {
   return ans;
 }
 
-void delete_area(std::pair<double**, int**> area) {
+inline void delete_area(std::pair<double**, int**> area) {
   delete_array(area.first);
   delete_array(area.second);
 }
