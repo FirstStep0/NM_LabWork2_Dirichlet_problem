@@ -1,6 +1,5 @@
 #pragma once
 #include "../include/structures.h";
-const double PI = 3.1415926535898;
 
 double m1(double x, double y) {
   if (abs(x - 1.0) < 1e-6)

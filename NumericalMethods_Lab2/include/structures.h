@@ -3,6 +3,8 @@
 #include "../include/nlohmann/json.hpp"
 using json = nlohmann::json;
 
+const double PI = 3.1415926535898;
+
 struct global_data {
   int numberVariant;
   bool test;
@@ -34,6 +36,7 @@ struct global_data {
   std::vector<int> N;
   std::vector<double> acc;
   std::vector<double> R;
+  double time;
 
   // auxiliary
   std::vector<double> coord_x;
@@ -80,6 +83,7 @@ struct global_data {
     j["param"] = param;
     j["arr_u"] = arr_u;
     j["arr_err"] = arr_err;
+    j["time"] = time;
     return j.dump();
   };
 };

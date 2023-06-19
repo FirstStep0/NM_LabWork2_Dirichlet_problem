@@ -93,7 +93,8 @@ void set_error(std::vector<std::vector<double>>& arr1,
 int main(int argc, char* argv[]) {
     std::cout.precision(precision);
 
-    clock_t start = clock();
+    clock_t start, common_time;
+    start = common_time = 0;
 
     std::ifstream in;
     std::ofstream out;
@@ -127,9 +128,14 @@ int main(int argc, char* argv[]) {
         double x, y;
 
         if (data.test) {
+            // begin work of method
+            start = clock();
             result_method res =
                 method(v, f, mask, data.n, data.m, h, k,
                                         data.nmax[0], data.eps[0], data.param);
+            common_time += clock() - start;
+            // end work of method
+
             double** u = create_array<double>(data.m + 1, data.n + 1);
 
             fill_array_func(u, mask, data.n, data.m, data.a, data.c, h, k,
@@ -139,9 +145,14 @@ int main(int argc, char* argv[]) {
             set_error(data.arr_u[0], data.arr_u[1], data.arr_err, mask, data,
                       1);
         } else {
+            // begin work of method
+            start = clock();
             result_method res =
                 method(v, f, mask, data.n, data.m, h, k,
                                         data.nmax[0], data.eps[0], data.param);
+            common_time += clock() - start;
+            // end work of method
+
             add_result_method(0, v, res, data);
 
             // task 2
@@ -158,15 +169,22 @@ int main(int argc, char* argv[]) {
 
             fill_array_func(f2, mask2, data.n, data.m, data.a, data.c, h, k,
                             data.func_f);
+            // begin work of method
+            start = clock();
             res =
                 method(v2, f2, mask2, data.n, data.m, h, k,
                                         data.nmax[1], data.eps[1], data.param);
+            common_time += clock() - start;
+            // end work of method
+
             add_result_method(1, v2, res, data);
             data.m /= 2;
             data.n /= 2;
             set_error(data.arr_u[0], data.arr_u[1], data.arr_err, mask, data,
                       2);
         }
+        data.time = (double)(common_time) / CLOCKS_PER_SEC;
+
         out.open(argv[2]);
         out.clear();
         out << data.get_answer() << "\n";
@@ -181,8 +199,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    clock_t end = clock();
-    double seconds = (double)(end - start) / CLOCKS_PER_SEC;
+    double seconds = (double)(common_time) / CLOCKS_PER_SEC;
     std::cout << "The time: " << seconds << " seconds\n";
 }
      
