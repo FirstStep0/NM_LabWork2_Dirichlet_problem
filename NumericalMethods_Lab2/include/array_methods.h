@@ -134,7 +134,7 @@ inline void fill_border_of_array(double** arr, int** mask, const global_data& da
           arr[j][i] = data.func_m(x, y);
           break;
         case 2:
-          // линейная интерпляция значений по оси X
+          // Г«ГЁГ­ГҐГ©Г­Г Гї ГЁГ­ГІГҐГ°ГЇГ«ГїГ¶ГЁГї Г§Г­Г Г·ГҐГ­ГЁГ© ГЇГ® Г®Г±ГЁ X
           arr[j][i] = (f2 * (x - a) - f1 * (x - b)) / (b - a);
           break;
       }
@@ -142,7 +142,7 @@ inline void fill_border_of_array(double** arr, int** mask, const global_data& da
   }
 }
 
-inline void fill_arrays_of_coord(global_data& data) {
+/* void fill_arrays_of_coord(global_data& data) {
   data.coord_x.resize(data.n + 1);
   data.coord_y.resize(data.m + 1);
 
@@ -153,7 +153,7 @@ inline void fill_arrays_of_coord(global_data& data) {
 
   for (int j = 0; j <= data.m; ++j) data.coord_y[j] = c + j * k;
   for (int i = 0; i <= data.n; ++i) data.coord_x[i] = a + i * h;
-}
+}*/
 
 inline std::pair<double**, int**> create_area(const global_data& data) {
   std::pair<double**, int**> ans;

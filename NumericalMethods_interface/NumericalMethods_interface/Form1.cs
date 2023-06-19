@@ -105,7 +105,7 @@ namespace NumericalMethods_interface
             info.CreateNoWindow = true;
             info.UseShellExecute = false;
             StreamReader sr;
-            //Task<string> task = null;
+            Task<string> task = null;
 
 
             Process p = Process.Start(info);
@@ -113,12 +113,14 @@ namespace NumericalMethods_interface
             while ((!p.HasExited))
             {
                 if (backgroundWorker1.CancellationPending) { p.Kill(); e.Cancel = true; return; };
-                /*if (task == null) task = p.StandardOutput.ReadLineAsync();
+                if (task == null) task = p.StandardOutput.ReadLineAsync();
                 if (task != null && task.IsCompleted) {
-                    double stage = double.Parse(task.Result.Replace('.', ','));
+                    int stage;
+                    if (int.TryParse(task.Result, out stage)) {
+                        backgroundWorker1.ReportProgress(Clamp((int)(stage), 0, 100));
+                    }
                     task = null;
-                    backgroundWorker1.ReportProgress(Clamp((int)(stage * 100), 0, 100));
-                }*/
+                }
             }
             p.WaitForExit();
             if (p.ExitCode != 0) throw new Exception(p.StandardError.ReadLine());
@@ -181,6 +183,9 @@ namespace NumericalMethods_interface
         }
 
         private void ShowTable(DataGridView gridView, double start_x, double step_x, double start_y, double step_y, List<List<double>> arr, int n, int m) {
+            n = Math.Min(n, 400);
+            m = Math.Min(m, 400);
+
             gridView.ColumnCount = n + 2;
             gridView.RowCount = m + 2;
 
@@ -211,36 +216,43 @@ namespace NumericalMethods_interface
                     gridView[i + 1, j + 1].Value = String.Format("{0:f8}", arr[j][i]);
         }
 
+        private void ShowLastAnswer() {
+            FileStream fs = File.Open(path_output, FileMode.Open, FileAccess.Read);
+            StreamReader reader = new StreamReader(fs);
+            if (reader == null) throw new Exception("reader is null");
+            answer ans = JsonConvert.DeserializeObject<answer>(reader.ReadToEnd());
+            reader.Close();
+            ShowTable(dataGridView_u1, ans.a, (ans.b - ans.a) / ans.n, ans.c, (ans.d - ans.c) / ans.m, ans.arr_u[0], ans.n, ans.m);
+            if (ans.test)
+            {
+                ShowTable(dataGridView_u2, ans.a, (ans.b - ans.a) / ans.n, ans.c, (ans.d - ans.c) / ans.m, ans.arr_u[1], ans.n, ans.m);
+            }
+            else
+            {
+                ShowTable(dataGridView_u2, ans.a, (ans.b - ans.a) / (ans.n * 2), ans.c, (ans.d - ans.c) / (ans.m * 2), ans.arr_u[1], ans.n * 2, ans.m * 2);
+            }
+            ShowTable(dataGridView_abs_err, ans.a, (ans.b - ans.a) / (ans.n), ans.c, (ans.d - ans.c) / (ans.m), ans.arr_err, ans.n, ans.m);
+
+            if (ans.test)
+            {
+                print_ref_for_test_task(ans);
+            }
+            else
+            {
+                print_ref_for_basic_task(ans);
+            }
+        }
+
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (!e.Cancelled) {
-                FileStream fs = File.Open(path_output, FileMode.Open, FileAccess.Read);
-                StreamReader reader = new StreamReader(fs);
-                answer ans = JsonConvert.DeserializeObject<answer>(reader.ReadToEnd());
-                reader.Close();
-
-                ShowTable(dataGridView_u1, ans.a, (ans.b - ans.a) / ans.n, ans.c, (ans.d - ans.c) / ans.m, ans.arr_u[0], ans.n, ans.m);
-                if (ans.test)
-                {
-                    ShowTable(dataGridView_u2, ans.a, (ans.b - ans.a) / ans.n, ans.c, (ans.d - ans.c) / ans.m, ans.arr_u[1], ans.n, ans.m);
-                }
-                else {
-                    ShowTable(dataGridView_u2, ans.a, (ans.b - ans.a) / (ans.n * 2), ans.c, (ans.d - ans.c) / (ans.m * 2), ans.arr_u[1], ans.n * 2, ans.m * 2);
-                }
-                ShowTable(dataGridView_abs_err, ans.a, (ans.b - ans.a) / (ans.n), ans.c, (ans.d - ans.c) / (ans.m), ans.arr_err, ans.n, ans.m);
-
-                if (ans.test) {
-                    print_ref_for_test_task(ans);
-                }
-                else {
-                    print_ref_for_basic_task(ans);
-                }
+                ShowLastAnswer();
             }
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            //progressBar1.Value = e.ProgressPercentage;
+            progressBar1.Value = e.ProgressPercentage;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -308,6 +320,11 @@ namespace NumericalMethods_interface
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ShowLastAnswer();
         }
     }
 
