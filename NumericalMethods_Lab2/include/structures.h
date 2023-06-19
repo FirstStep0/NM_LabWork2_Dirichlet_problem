@@ -60,7 +60,7 @@ struct global_data {
     //for (int j = 0; j <= m; ++j) coord_y[j] = c + j * k;
   }
 
-  std::string get_answer() {
+  inline std::string get_answer() {
     json j;
     j["a"] = a;
     j["b"] = b;

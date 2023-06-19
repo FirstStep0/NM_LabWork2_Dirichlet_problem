@@ -176,7 +176,7 @@ int main(int argc, char* argv[]) {
         delete_array(f);
     }
 
-    catch (std::exception e) {
+    catch (const std::exception& e) {
         std::cerr << e.what();
         return -1;
     }

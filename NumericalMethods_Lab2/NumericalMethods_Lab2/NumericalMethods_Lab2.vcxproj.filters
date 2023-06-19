@@ -18,6 +18,9 @@
     <ClCompile Include="..\source\NumericalMethods_Lab2.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\ConjugateGradientsMethod.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\array_methods.h">
@@ -30,6 +33,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="..\include\structures.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ConjugateGradientsMethod.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
